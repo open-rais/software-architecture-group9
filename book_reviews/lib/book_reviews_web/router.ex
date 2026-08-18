@@ -18,6 +18,24 @@ defmodule BookReviewsWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/authors", AuthorLive.Index, :index
+    live "/authors/new", AuthorLive.Form, :new
+    live "/authors/:id", AuthorLive.Show, :show
+    live "/authors/:id/edit", AuthorLive.Form, :edit
+
+    live "/books", BookLive.Index, :index
+    live "/books/new", BookLive.Form, :new
+    live "/books/:id", BookLive.Show, :show
+    live "/books/:id/edit", BookLive.Form, :edit
+
+    live "/books/:book_id/reviews", ReviewLive.Index, :index
+    live "/books/:book_id/reviews/new", ReviewLive.Form, :new
+    live "/books/:book_id/reviews/:id/edit", ReviewLive.Form, :edit
+
+    live "/books/:book_id/sales", SaleLive.Index, :index
+    live "/books/:book_id/sales/new", SaleLive.Form, :new
+    live "/books/:book_id/sales/:id/edit", SaleLive.Form, :edit
   end
 
   # Other scopes may use custom stacks.

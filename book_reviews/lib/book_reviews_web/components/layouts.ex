@@ -45,10 +45,10 @@ defmodule BookReviewsWeb.Layouts do
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
           <li>
-            <a href="https://phoenixframework.org/" class="btn btn-ghost">Website</a>
+            <.link navigate={~p"/authors"} class="btn btn-ghost">Authors</.link>
           </li>
           <li>
-            <a href="https://github.com/phoenixframework/phoenix" class="btn btn-ghost">GitHub</a>
+            <.link navigate={~p"/books"} class="btn btn-ghost">Books</.link>
           </li>
           <li>
             <.theme_toggle />
