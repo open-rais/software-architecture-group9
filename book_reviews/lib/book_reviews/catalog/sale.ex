@@ -13,7 +13,9 @@ defmodule BookReviews.Catalog.Sale do
 
   def changeset(sale, attrs) do
     sale
-    |> cast(attrs, [:year, :sales])
-    |> validate_required([:year, :sales])
+    |> cast(attrs, [:year, :sales, :book_id])
+    |> validate_required([:year, :sales, :book_id])
+    |> foreign_key_constraint(:book_id)
+    |> unique_constraint([:book_id, :year], name: :sales_book_id_year_index)
   end
 end

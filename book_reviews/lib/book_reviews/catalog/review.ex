@@ -14,8 +14,9 @@ defmodule BookReviews.Catalog.Review do
 
   def changeset(review, attrs) do
     review
-    |> cast(attrs, [:review, :score, :upvotes])
-    |> validate_required([:review, :score])
+    |> cast(attrs, [:review, :score, :upvotes, :book_id])
+    |> validate_required([:review, :score, :book_id])
     |> validate_number(:score, greater_than_or_equal_to: 1, less_than_or_equal_to: 5)
+    |> foreign_key_constraint(:book_id)
   end
 end
