@@ -42,17 +42,35 @@ defmodule BookReviewsWeb.Layouts do
           <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
         </a>
       </div>
+      
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
           <li>
             <.link navigate={~p"/authors"} class="btn btn-ghost">Authors</.link>
           </li>
+          
           <li>
             <.link navigate={~p"/books"} class="btn btn-ghost">Books</.link>
           </li>
+          
+          <li>
+            <.link navigate={~p"/reports/authors"} class="btn btn-ghost">Authors Report</.link>
+          </li>
+          
+          <li>
+            <.link navigate={~p"/reports/top-rated-books"} class="btn btn-ghost">Top Rated</.link>
+          </li>
+          
+          <li>
+            <.link navigate={~p"/reports/top-selling-books"} class="btn btn-ghost">
+              Top Selling
+            </.link>
+          </li>
+          
           <li>
             <.theme_toggle />
           </li>
+          
           <li>
             <a href="https://phoenix.hexdocs.pm/overview.html" class="btn btn-primary">
               Get Started <span aria-hidden="true">&rarr;</span>
@@ -67,8 +85,7 @@ defmodule BookReviewsWeb.Layouts do
         {render_slot(@inner_block)}
       </div>
     </main>
-
-    <.flash_group flash={@flash} />
+     <.flash_group flash={@flash} />
     """
   end
 
@@ -85,9 +102,7 @@ defmodule BookReviewsWeb.Layouts do
   def flash_group(assigns) do
     ~H"""
     <div id={@id} aria-live="polite">
-      <.flash kind={:info} flash={@flash} />
-      <.flash kind={:error} flash={@flash} />
-
+      <.flash kind={:info} flash={@flash} /> <.flash kind={:error} flash={@flash} />
       <.flash
         id="client-error"
         kind={:error}
@@ -102,7 +117,7 @@ defmodule BookReviewsWeb.Layouts do
         {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
-
+      
       <.flash
         id="server-error"
         kind={:error}
@@ -130,7 +145,6 @@ defmodule BookReviewsWeb.Layouts do
     ~H"""
     <div class="card relative flex flex-row items-center border-2 border-base-300 bg-base-300 rounded-full">
       <div class="absolute w-1/3 h-full rounded-full border-1 border-base-200 bg-base-100 brightness-200 left-0 [[data-theme=light]_&]:left-1/3 [[data-theme=dark]_&]:left-2/3 [[data-theme-source=system]_&]:!left-0 transition-[left]" />
-
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
@@ -138,7 +152,7 @@ defmodule BookReviewsWeb.Layouts do
       >
         <.icon name="hero-computer-desktop-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
-
+      
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
@@ -146,7 +160,7 @@ defmodule BookReviewsWeb.Layouts do
       >
         <.icon name="hero-sun-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
-
+      
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}

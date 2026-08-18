@@ -36,6 +36,10 @@ defmodule BookReviewsWeb.Router do
     live "/books/:book_id/sales", SaleLive.Index, :index
     live "/books/:book_id/sales/new", SaleLive.Form, :new
     live "/books/:book_id/sales/:id/edit", SaleLive.Form, :edit
+
+    live "/reports/authors", ReportLive.Authors, :index
+    live "/reports/top-rated-books", ReportLive.TopRated, :index
+    live "/reports/top-selling-books", ReportLive.TopSelling, :index
   end
 
   # Other scopes may use custom stacks.
