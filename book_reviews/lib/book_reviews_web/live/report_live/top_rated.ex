@@ -14,7 +14,7 @@ defmodule BookReviewsWeb.ReportLive.TopRated do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} max_width="max-w-6xl">
       <.header>
         Top 10 Rated Books
         <:subtitle>
