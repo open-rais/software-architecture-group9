@@ -17,7 +17,7 @@ defmodule BookReviewsWeb.Router do
   scope "/", BookReviewsWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", BookLive.Index, :index
 
     live "/authors", AuthorLive.Index, :index
     live "/authors/new", AuthorLive.Form, :new
