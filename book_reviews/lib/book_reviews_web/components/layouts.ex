@@ -37,46 +37,32 @@ defmodule BookReviewsWeb.Layouts do
     ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-2">
-          <img src={~p"/images/logo.svg"} width="36" />
-          <span class="text-sm font-semibold">v{Application.spec(:phoenix, :vsn)}</span>
-        </a>
-      </div>
-      
-      <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
           <li>
             <.link navigate={~p"/authors"} class="btn btn-ghost">Authors</.link>
           </li>
-          
           <li>
             <.link navigate={~p"/books"} class="btn btn-ghost">Books</.link>
           </li>
-          
+          <li>
+            <.link navigate={~p"/search"} class="btn btn-ghost">Search</.link>
+          </li>
           <li>
             <.link navigate={~p"/reports/authors"} class="btn btn-ghost">Authors Report</.link>
           </li>
-          
           <li>
             <.link navigate={~p"/reports/top-rated-books"} class="btn btn-ghost">Top Rated</.link>
           </li>
-          
           <li>
             <.link navigate={~p"/reports/top-selling-books"} class="btn btn-ghost">
               Top Selling
             </.link>
           </li>
-          
-          <li>
-            <.theme_toggle />
-          </li>
-          
-          <li>
-            <a href="https://phoenix.hexdocs.pm/overview.html" class="btn btn-primary">
-              Get Started <span aria-hidden="true">&rarr;</span>
-            </a>
-          </li>
         </ul>
+      </div>
+
+      <div class="flex-none">
+        <.theme_toggle />
       </div>
     </header>
 
@@ -85,7 +71,7 @@ defmodule BookReviewsWeb.Layouts do
         {render_slot(@inner_block)}
       </div>
     </main>
-     <.flash_group flash={@flash} />
+    <.flash_group flash={@flash} />
     """
   end
 
@@ -117,7 +103,7 @@ defmodule BookReviewsWeb.Layouts do
         {gettext("Attempting to reconnect")}
         <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
       </.flash>
-      
+
       <.flash
         id="server-error"
         kind={:error}
@@ -152,7 +138,7 @@ defmodule BookReviewsWeb.Layouts do
       >
         <.icon name="hero-computer-desktop-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
-      
+
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}
@@ -160,7 +146,7 @@ defmodule BookReviewsWeb.Layouts do
       >
         <.icon name="hero-sun-micro" class="size-4 opacity-75 hover:opacity-100" />
       </button>
-      
+
       <button
         class="flex p-2 cursor-pointer w-1/3"
         phx-click={JS.dispatch("phx:set-theme")}

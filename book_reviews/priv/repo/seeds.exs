@@ -18,6 +18,10 @@ Repo.delete_all(Review)
 Repo.delete_all(Book)
 Repo.delete_all(Author)
 
+# Reset SQLite's autoincrement counters so re-running this script always
+# produces the same clean id ranges instead of ids that keep climbing.
+Repo.query!("DELETE FROM sqlite_sequence WHERE name IN ('sales', 'reviews', 'books', 'authors')")
+
 # --- Fixture data -------------------------------------------------------
 
 first_names = ~w(
@@ -62,6 +66,63 @@ title_adjectives = ~w(
   Crimson Fractured Restless Radiant Wandering Ancient Bitter Fragile
 )
 
+characters = ~w(
+  detective queen sailor scholar inventor orphan soldier healer thief
+  scientist knight merchant poet spy farmer diplomat rebel widow prince
+  fugitive
+)
+
+character_adjectives = ~w(
+  reluctant grieving ambitious estranged fearless disgraced idealistic
+  weary cunning devoted
+)
+
+themes = ~w(
+  betrayal redemption identity survival ambition forgiveness power loss
+  hope revenge sacrifice loyalty freedom greed courage
+)
+
+settings = [
+  "a drowned city",
+  "a forgotten kingdom",
+  "the outer colonies",
+  "a war-torn village",
+  "an abandoned monastery",
+  "a floating market",
+  "the last free town",
+  "a frozen border outpost",
+  "a crumbling empire",
+  "a hidden valley",
+  "a smuggler's port",
+  "a besieged capital"
+]
+
+conflicts = [
+  "outwit a ruthless empire",
+  "uncover a family secret",
+  "survive a brutal winter",
+  "stop an ancient prophecy",
+  "escape a doomed marriage",
+  "expose a political conspiracy",
+  "reclaim a stolen throne",
+  "break a generational curse",
+  "navigate a fragile truce",
+  "confront a childhood rival"
+]
+
+inciting_events = [
+  "a stranger arrives at midnight",
+  "an old letter surfaces",
+  "the kingdom falls to war",
+  "a ship disappears at sea",
+  "a plague spreads through the capital",
+  "a prophecy is fulfilled",
+  "an heir goes missing",
+  "a treaty collapses overnight",
+  "a relic is stolen from the temple",
+  "a rebellion ignites in the south"
+]
+
 review_comments = %{
   low: [
     "Really did not connect with this one, the pacing dragged.",
@@ -100,6 +161,27 @@ random_title = fn ->
     2 -> "#{Enum.random(title_nouns)} of #{Enum.random(title_nouns)}"
     3 -> "The #{Enum.random(title_nouns)}'s #{Enum.random(title_nouns)}"
     4 -> "A #{Enum.random(title_adjectives)} #{Enum.random(title_nouns)}"
+  end
+end
+
+random_character = fn -> "#{Enum.random(character_adjectives)} #{Enum.random(characters)}" end
+
+random_summary = fn genre ->
+  case Enum.random(1..5) do
+    1 ->
+      "Follows a #{random_character.()} who must #{Enum.random(conflicts)} in #{Enum.random(settings)}."
+
+    2 ->
+      "Set in #{Enum.random(settings)}, this #{String.downcase(genre)} novel explores #{Enum.random(themes)} and #{Enum.random(themes)}."
+
+    3 ->
+      "A #{String.downcase(genre)} tale of #{Enum.random(themes)}, centered on a #{random_character.()} in #{Enum.random(settings)}."
+
+    4 ->
+      "When #{Enum.random(inciting_events)}, a #{random_character.()} is forced to confront #{Enum.random(themes)}."
+
+    5 ->
+      "Chronicles the journey of a #{random_character.()} through #{Enum.random(settings)}, facing a plan to #{Enum.random(conflicts)}."
   end
 end
 
@@ -162,8 +244,7 @@ books_with_children =
     book =
       Repo.insert!(%Book{
         name: random_title.(),
-        summary:
-          "A #{String.downcase(Enum.random(genres))} story about #{Enum.random(title_nouns) |> String.downcase()} and #{Enum.random(title_nouns) |> String.downcase()}.",
+        summary: random_summary.(Enum.random(genres)),
         publication_date: publication_date,
         sales_count: total_sales,
         author_id: author.id

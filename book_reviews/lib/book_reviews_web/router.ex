@@ -37,6 +37,8 @@ defmodule BookReviewsWeb.Router do
     live "/books/:book_id/sales/new", SaleLive.Form, :new
     live "/books/:book_id/sales/:id/edit", SaleLive.Form, :edit
 
+    live "/search", SearchLive.Index, :index
+
     live "/reports/authors", ReportLive.Authors, :index
     live "/reports/top-rated-books", ReportLive.TopRated, :index
     live "/reports/top-selling-books", ReportLive.TopSelling, :index

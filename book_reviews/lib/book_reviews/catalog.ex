@@ -8,6 +8,14 @@ defmodule BookReviews.Catalog do
   alias BookReviews.Repo
   alias BookReviews.Catalog.{Author, Book, Review, Sale}
 
+  @search_stopwords ~w(
+    a an the of in on to and or but is are was were who whom this that
+    these those with for from as at by it its be been when while through
+    into onto over under after before about than then so if not no do
+    does did has have had will would can could must should may might up
+    down out off
+  )
+
   ## Authors
 
   def list_authors do
@@ -280,5 +288,49 @@ defmodule BookReviews.Catalog do
       |> Map.put(:author_total_sales, Map.get(author_totals, entry.author_id, 0))
       |> Map.put(:top5_in_publication_year, rank != nil and rank <= 5)
     end)
+  end
+
+  @doc """
+  Searches books whose summary contains any of the words in `query`
+  (case-insensitive), returning a page of results.
+
+  Returns `%{books:, total_count:, total_pages:, page:}`. An empty or
+  blank query returns no results. `page` in the result is clamped to
+  `1..total_pages`.
+  """
+  def search_books(query, opts \\ []) do
+    per_page = Keyword.get(opts, :per_page, 10)
+    requested_page = Keyword.get(opts, :page, 1)
+
+    words =
+      query
+      |> to_string()
+      |> String.downcase()
+      |> String.split(~r/\s+/, trim: true)
+      |> Enum.reject(&(&1 in @search_stopwords))
+      |> Enum.uniq()
+
+    if words == [] do
+      %{books: [], total_count: 0, total_pages: 0, page: 1}
+    else
+      filter =
+        Enum.reduce(words, dynamic(false), &dynamic([b], ^&2 or like(b.summary, ^"%#{&1}%")))
+
+      base_query = from(b in Book, where: ^filter)
+
+      total_count = Repo.aggregate(base_query, :count)
+      total_pages = max(div(total_count + per_page - 1, per_page), 1)
+      page = requested_page |> max(1) |> min(total_pages)
+
+      books =
+        base_query
+        |> order_by([b], asc: b.name)
+        |> limit(^per_page)
+        |> offset(^((page - 1) * per_page))
+        |> preload(:author)
+        |> Repo.all()
+
+      %{books: books, total_count: total_count, total_pages: total_pages, page: page}
+    end
   end
 end
